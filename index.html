@@ -984,7 +984,7 @@
 
             <div class="lp-footer-buttons">
                 <button id="howToBuyBtn">HOW TO BUY NOTHING</button>
-                <button id="giveawayBtn">+777K MEANINGLESS GIVEAWAY</button>
+                <button id="burnToVoidBtn">BURN TO VOID</button> <button id="giveawayBtn">+777K MEANINGLESS GIVEAWAY</button>
             </div>
         </section>
 
@@ -1070,10 +1070,11 @@
             <h3>3. The Anti-Roadmap (or The Road to Nowhere)</h3>
             <p>Our roadmap is a blank canvas, perfectly reflecting our commitment to going nowhere. We plan to achieve absolutely nothing, consistently, for an indefinite period. Key milestones include:</p>
             <ul>
-                <li>Q3 2025: Continue to exist (maybe).</li>
-                <li>Q4 2025: Fail to launch any meaningful partnerships.</li>
-                <li>2026: Further decentralize the feeling of despair.</li>
-                <li>Future: Achieve ultimate oblivion.</li>
+                <li>**Q3 2025: Continue to exist (maybe).**</li>
+                <li>**Q4 2025: Fail to launch any meaningful partnerships.**</li>
+                <li>**2026: Further decentralize the feeling of despair.**</li>
+                <li>**Future: Achieve ultimate oblivion.**</li>
+                <li>**Forever: Continue to be nothing.**</li>
             </ul>
 
             <h3>4. Our Non-existent Team</h3>
@@ -1118,8 +1119,32 @@
         let totalTokensSold = 0;
         const usdGoal = 1000000; // Example goal
         const tokensGoal = 1000000000; // Example goal
-        let currentStage = 1; // Start stage
-        let knotPrice = 0.00000001; // Initial price per KNOT
+
+        let currentStage = parseInt(localStorage.getItem('0xknothing_currentStage')) || 1; // Start stage, load from localStorage
+        let knotPrice = calculateKnotPrice(currentStage); // Calculate price based on stage
+
+        // Function to calculate KNOT price based on stage
+        function calculateKnotPrice(stage) {
+            // Stage 1: 0.00000001
+            // Stage 2: 0.00000002
+            // Stage 3: 0.00000004
+            // ... exponential increase, then slow down, then random large jumps
+            if (stage <= 10) {
+                return 0.00000001 * Math.pow(2, stage - 1);
+            } else if (stage <= 20) {
+                return 0.00000001 * Math.pow(2, 9) + (stage - 10) * 0.00000005; // Slower linear increase after stage 10
+            } else {
+                // After stage 20, prices become more erratic or symbolic
+                const basePrice = 0.00000001 * Math.pow(2, 9) + 10 * 0.00000005;
+                // Introduce random jumps and resets
+                const randomFactor = Math.random();
+                if (randomFactor < 0.3) return basePrice * (1 + Math.random() * 0.5); // Upward jump
+                if (randomFactor < 0.6) return basePrice * (0.5 + Math.random() * 0.5); // Downward swing
+                if (randomFactor < 0.8) return Math.random() * 0.00001; // Small random value
+                return Infinity; // Price to infinity sometimes
+            }
+        }
+
 
         // Meme data (for the new NFT look)
         const memes = [
@@ -1207,11 +1232,19 @@
                 let timeLeft = endOfDay.getTime() - bangkokTime.getTime();
 
                 if (timeLeft <= 0) {
+                    // Reset for the next day immediately
                     const nextDay = new Date(bangkokTime);
                     nextDay.setDate(bangkokTime.getDate() + 1);
                     nextDay.setHours(23, 59, 59, 999);
                     timeLeft = nextDay.getTime() - bangkokTime.getTime();
-                    updateLPStatus("Another day, another nothingness begins!"); // Using new status function
+
+                    // Increment stage and update price
+                    currentStage++;
+                    localStorage.setItem('0xknothing_currentStage', currentStage); // Save to localStorage
+                    knotPrice = calculateKnotPrice(currentStage); // Recalculate price for new stage
+                    updateLPInterface(); // Update the LP section immediately
+
+                    updateLPStatus(`Stage transitioned to Stage ${currentStage}! Embrace the new level of nothingness.`);
                     appendRandomMessage();
                 }
 
@@ -1315,6 +1348,14 @@
                 updateLPStatus("Congratulaions! You just won... nothing! As expected. No gas fees required!");
                 appendRandomMessage();
             });
+            // Add event listener for Burn button
+            document.getElementById('burnToVoidBtn').addEventListener('click', () => {
+                if (!isWalletConnected) {
+                    updateLPStatus("Connect wallet first to burn your nothing!");
+                    return;
+                }
+                showPopup('burn'); // Call popup for burn confirmation
+            });
 
             connectWallet(); // Simulate Wallet connection on page load
         });
@@ -1355,25 +1396,33 @@
 
         // --- New LP Interface Functions ---
         function updateLPInterface() {
-            // Simulate dynamic stage and price
-            currentStage = Math.floor(Math.random() * 10) + 1; // Stage 1-10
-            knotPrice = 0.00000001 * Math.pow(10, currentStage - 1) + (Math.random() * 0.000000005); // Exponential price increase + fluctuation
+            // currentStage and knotPrice are now managed by countdown logic
             let nextStagePrice = knotPrice * (1 + 0.1 * Math.random()); // 10-20% higher for next stage
 
             document.getElementById("currentStage").textContent = `Stage ${currentStage}`;
-            document.getElementById("nextStagePrice").textContent = `$${nextStagePrice.toFixed(8)}`;
-            document.getElementById("knottingPrice").textContent = `$${knotPrice.toFixed(8)}`;
+
+            // Handle Infinity price for display
+            if (knotPrice === Infinity) {
+                document.getElementById("nextStagePrice").textContent = `$∞ (Impossible)`;
+                document.getElementById("knottingPrice").textContent = `$∞`;
+            } else {
+                document.getElementById("nextStagePrice").textContent = `$${nextStagePrice.toFixed(8)}`;
+                document.getElementById("knottingPrice").textContent = `$${knotPrice.toFixed(8)}`;
+            }
 
             // Simulate USD Raised and Tokens Sold
-            totalUsdRaised = Math.floor(usdGoal * (currentStage / 10 + (Math.random() * 0.05))); // Closer to goal as stage increases
-            totalTokensSold = Math.floor(tokensGoal * (currentStage / 10 + (Math.random() * 0.05)));
+            // These should also be somewhat tied to currentStage, but with more randomness
+            totalUsdRaised = Math.floor(currentStage * 10000 + Math.random() * 50000); // Example increase
+            totalTokensSold = Math.floor(currentStage * 100000000 + Math.random() * 500000000); // Example increase
 
-            document.getElementById("usdRaised").textContent = `$${totalUsdRaised.toLocaleString()} / $${usdGoal.toLocaleString()}`;
-            document.getElementById("tokensSold").textContent = `${totalTokensSold.toLocaleString()} / ${tokensGoal.toLocaleString()}`;
+            document.getElementById("usdRaised").textContent = `$${totalUsdRaised.toLocaleString()} / $∞`; // Goal can be infinite
+            document.getElementById("tokensSold").textContent = `${totalTokensSold.toLocaleString()} / ∞`; // Goal can be infinite
 
-            // Update progress bar
-            const progress = (totalUsdRaised / usdGoal) * 100;
-            document.getElementById("progressFill").style.width = `${Math.min(100, progress).toFixed(2)}%`; // Cap at 100%
+            // Update progress bar - maybe remove if goal is infinite or make it always 0-100% of a stage
+            const progressWithinStage = (currentStage % 1) * 100; // Simplified for "nothing" concept
+            document.getElementById("progressFill").style.width = `${Math.min(100, progressWithinStage).toFixed(2)}%`; // Cap at 100%
+            // Or, for a more "nothing" feel, make it completely random
+            // document.getElementById("progressFill").style.width = `${(Math.random() * 100).toFixed(2)}%`;
 
             calculateReceiveAmount(); // Update KNOT amount when prices change
         }
@@ -1400,7 +1449,12 @@
                     break;
             }
 
-            const receivedKnot = usdEquivalent / knotPrice;
+            let receivedKnot;
+            if (knotPrice === Infinity || knotPrice === 0) {
+                receivedKnot = 0; // Can't buy if price is infinite or zero
+            } else {
+                receivedKnot = usdEquivalent / knotPrice;
+            }
             document.getElementById('receiveTokenAmount').value = receivedKnot.toLocaleString(undefined, { maximumFractionDigits: 0 }); // No decimals for KNOT
         }
 
@@ -1637,7 +1691,7 @@
             });
         }
 
-        // --- Popup Functions (Modified for LP Buy) ---
+        // --- Popup Functions (Modified for LP Buy and Burn) ---
         let currentAction = '';
         let currentAmount = 0;
         let currentCurrency = '';
@@ -1675,6 +1729,10 @@
                 title = 'Confirm Buy KNOTHING';
                 message = `Are you sure you want to spend <span style="color:#00ff80;">${inputAmount.toLocaleString()} ${currency}</span> to buy <span style="color:#00ff80;">${formattedReceiveKnot} KNOTHING</span>?`;
                 actionFunction = () => processLPBuy(inputAmount, currency, receiveKnot);
+            } else if (actionType === 'burn') { // <-- เพิ่มส่วนนี้
+                title = 'Burn KNOTHING to the Void';
+                message = `Are you absolutely sure you want to burn your KNOTHING tokens into the eternal void? There is no return. Just... nothing.`;
+                actionFunction = () => burnToVoid();
             } else {
                 // Fallback or other actions if they were re-introduced. For now, this branch might not be used.
                 console.warn("Unsupported action type for popup:", actionType);
@@ -1709,6 +1767,27 @@
                 updateLPInterface(); // Update the LP interface immediately
 
                 updateLPStatus(`✔️ Successfully bought ${receivedKnot.toLocaleString()} KNOTHING! TX: ${txHash.slice(0, 10)}... Welcome to the void.`);
+                appendRandomMessage();
+            }, 2500 + Math.random() * 1500);
+        }
+
+        async function burnToVoid() {
+            if (currentKnotBalance === 0) {
+                updateLPStatus("You have no KNOTHING to burn! It's already nothing.");
+                appendRandomMessage();
+                return;
+            }
+
+            updateLPStatus(`Preparing to burn ${currentKnotBalance.toLocaleString()} KNOTHING... Feeling lighter already?`);
+            appendRandomMessage();
+
+            setTimeout(() => {
+                const burnedAmount = currentKnotBalance;
+                currentKnotBalance = 0; // Set balance to 0 after burning
+                document.getElementById("knotBalance").textContent = `${currentKnotBalance.toLocaleString()} KNOT`;
+
+                const txHash = "0x" + Math.random().toString(16).substr(2, 64);
+                updateLPStatus(`✔️ Successfully burned ${burnedAmount.toLocaleString()} KNOTHING to the void! TX: ${txHash.slice(0, 10)}... You achieved ultimate nothingness.`);
                 appendRandomMessage();
             }, 2500 + Math.random() * 1500);
         }
