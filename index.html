@@ -109,6 +109,30 @@
             flex-wrap: wrap;
             margin: 30px 0;
         }
+        /* New styles for input fields in CTA section */
+        .cta-item {
+            display: flex;
+            flex-direction: column; /* Stack input and button vertically */
+            gap: 5px; /* Space between input and button */
+            align-items: center;
+            margin-bottom: 15px; /* Space between each cta-item */
+        }
+        .cta-input {
+            background: #0a0a0a;
+            border: 1px solid #333;
+            color: #ccc;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            width: 150px; /* Adjust width as needed */
+            text-align: center;
+        }
+        .cta-input:focus {
+            outline: none;
+            border-color: #e63946;
+            box-shadow: 0 0 10px rgba(230, 57, 70, 0.3);
+        }
         .cta-section button {
             padding: 12px 24px;
             background: linear-gradient(135deg, #222, #111);
@@ -595,6 +619,187 @@
             font-size: 1.1rem;
         }
 
+        /* Price Chart Section */
+        .price-chart-section {
+            background: rgba(17, 17, 17, 0.9);
+            border: 1px solid #e63946;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px auto;
+            max-width: 600px;
+            box-shadow: 0 0 30px rgba(230, 57, 70, 0.2);
+        }
+        .price-chart-section h3 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            text-shadow: 0 0 10px rgba(255,255,255,0.3);
+        }
+        .chart-container {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 0 5px;
+        }
+        .chart-header span {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #aaa;
+        }
+        .current-price {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #00ff80; /* Green for price */
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(0, 255, 128, 0.5);
+        }
+        .price-change {
+            font-size: 1.1rem;
+            color: #00ff80;
+            margin-left: 10px;
+        }
+        .chart-placeholder {
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to top, rgba(0,255,128,0.1), rgba(0,255,128,0.4), rgba(0,0,0,0));
+            border: 1px solid #00ff80;
+            border-radius: 5px;
+            position: relative;
+            overflow: hidden;
+        }
+        .chart-line {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200%; /* Wider to allow scrolling effect */
+            height: 100%;
+            background: linear-gradient(to right,
+                #00ff80, #00ee77, #00dd66, #00cc55, #00bb44, #00aa33, #009922, #008811, #007700
+            );
+            background-size: 100% 100%;
+            animation: chartScroll 10s linear infinite; /* Scrolling animation */
+        }
+        @keyframes chartScroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+        .timeframe-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .timeframe-buttons button {
+            background: #222;
+            color: #777;
+            border: 1px solid #444;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+        }
+        .timeframe-buttons button:hover {
+            background: #333;
+            border-color: #e63946;
+            color: #e63946;
+        }
+        .timeframe-buttons button.active {
+            background: #e63946;
+            color: white;
+            border-color: #e63946;
+            box-shadow: 0 0 10px rgba(230, 57, 70, 0.4);
+        }
+        .chart-note {
+            font-size: 0.75rem;
+            color: #555;
+            margin-top: 20px;
+            font-style: italic;
+        }
+
+        /* Popup Styles */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px); /* Safari support */
+        }
+        .popup-content {
+            background: #1a1a1a;
+            border: 2px solid #e63946;
+            border-radius: 15px;
+            padding: 30px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(230, 57, 70, 0.5);
+            position: relative;
+            animation: fadeInScale 0.3s ease-out;
+        }
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .popup-content h4 {
+            color: #e63946;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        .popup-content p {
+            color: #ccc;
+            margin-bottom: 25px;
+            font-size: 1.1rem;
+        }
+        .popup-buttons button {
+            background: linear-gradient(135deg, #e63946, #ff6b7a);
+            border: none;
+            color: white;
+            padding: 10px 25px;
+            font-size: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+        .popup-buttons button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(230, 57, 70, 0.4);
+        }
+        .popup-buttons button.cancel-btn {
+            background: #333;
+            border: 1px solid #555;
+            color: #bbb;
+        }
+        .popup-buttons button.cancel-btn:hover {
+            background: #444;
+            border-color: #777;
+            box-shadow: none;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .glitch { font-size: 2.5rem; }
@@ -603,6 +808,18 @@
             .swap-row { flex-direction: column; gap: 10px; }
             .web3-section { padding: 20px; margin: 20px 0; }
             .meme-grid { grid-template-columns: 1fr; }
+            /* Responsive adjustments for CTA section */
+            .cta-section {
+                flex-direction: column; /* Stack items vertically on small screens */
+                align-items: center;
+            }
+            .cta-item {
+                width: 80%; /* Make items take more width */
+                max-width: 250px; /* Limit max width */
+            }
+            .cta-input {
+                width: 100%; /* Make input full width of its container */
+            }
         }
     </style>
 </head>
@@ -638,10 +855,22 @@
         </div>
 
         <div class="cta-section">
-            <button id="buyBtn" disabled>Buy Nothing</button>
-            <button id="sellBtn" disabled>Sell Nothing</button>
-            <button id="stakeBtn" disabled onclick="stakeNothing()">Stake Nothing</button>
-            <button id="burnBtn" disabled onclick="burnNothing()">Burn Nothing</button>
+            <div class="cta-item">
+                <input type="number" id="buyAmount" class="cta-input" placeholder="Amount" min="0" step="1">
+                <button id="buyBtn" disabled onclick="showPopup('buy')">Buy Nothing</button>
+            </div>
+            <div class="cta-item">
+                <input type="number" id="sellAmount" class="cta-input" placeholder="Amount" min="0" step="1">
+                <button id="sellBtn" disabled onclick="showPopup('sell')">Sell Nothing</button>
+            </div>
+            <div class="cta-item">
+                <input type="number" id="stakeAmount" class="cta-input" placeholder="Amount" min="0" step="1">
+                <button id="stakeBtn" disabled onclick="showPopup('stake')">Stake Nothing</button>
+            </div>
+            <div class="cta-item">
+                <input type="number" id="burnAmount" class="cta-input" placeholder="Amount" min="0" step="1">
+                <button id="burnBtn" disabled onclick="showPopup('burn')">Burn Nothing</button>
+            </div>
         </div>
 
         <section class="nft-section">
@@ -675,6 +904,29 @@
             </div>
             <button id="mintKnotBtn" class="web3-btn" onclick="mintNothing()" style="margin-top: 15px; width: 100%;"> Mint 999 KNOT (0.01 ETH) </button>
             <div id="mintStatus">Ready to waste your gas...</div>
+        </section>
+
+        <section class="price-chart-section">
+            <h3>Price Chart<br>(Totally Real & Not Fake)</h3>
+            <div class="chart-container">
+                <div class="chart-header">
+                    <span>$KNOT/USDT</span>
+                    <span id="priceChangePercent">+∞%</span>
+                </div>
+                <div class="current-price" id="currentKnotPrice">$0.00000068</div>
+                <div class="chart-placeholder">
+                    <div class="chart-line"></div>
+                </div>
+                <div class="timeframe-buttons">
+                    <button class="active">1M</button>
+                    <button>5M</button>
+                    <button>15M</button>
+                    <button>1H</button>
+                    <button>4H</button>
+                    <button>1D</button>
+                </div>
+                <p class="chart-note">* Chart shows the price of our hopes and dreams, not actual trading data</p>
+            </div>
         </section>
 
         <div class="stats-grid">
@@ -810,6 +1062,17 @@
         </footer>
     </div>
 
+    <div id="actionPopup" class="popup-overlay" style="display: none;">
+        <div class="popup-content">
+            <h4 id="popupTitle">Confirm Action</h4>
+            <p id="popupMessage">Are you sure you want to proceed?</p>
+            <div class="popup-buttons">
+                <button id="popupConfirmBtn">Confirm</button>
+                <button class="cancel-btn" onclick="hidePopup()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Global Web3 variables
         let provider, signer, userAddress;
@@ -926,25 +1189,28 @@
             // Then continue at intervals
             setInterval(appendRandomMessage, 4000);
 
-            // Add some interactive chaos to disabled buttons
-            const buttons = document.querySelectorAll('.cta-section button:not(.web3-btn)');
-            buttons.forEach(button => {
-                button.addEventListener('click', function() {
-                    if (this.disabled) { // Only show disappointment for truly disabled, non-web3 buttons
-                        const disappointments = [
-                            "Did you really think that would work?", "Nothing happens. As expected.",
-                            "The void acknowledges your click.", "Error 404: Function not found.",
-                            "You clicked nothing. Literally.", "Connect wallet first, genius.",
-                            "Even MetaMask is confused.", "Transaction failed before it started."
-                        ];
-                        const randomMsg = disappointments[Math.floor(Math.random() * disappointments.length)];
-                        const originalText = button.textContent;
-                        button.textContent = randomMsg;
-                        setTimeout(() => {
-                            button.textContent = originalText;
-                        }, 2000);
-                    }
-                });
+            // Add some interactive chaos to disabled buttons (now primarily for non-web3 enabled buttons)
+            const ctaButtons = document.querySelectorAll('.cta-section button'); // Get all buttons in cta-section
+            ctaButtons.forEach(button => {
+                // Ensure buttons that should trigger popup don't get this generic handler
+                if (!button.onclick || !button.onclick.toString().includes('showPopup')) {
+                    button.addEventListener('click', function() {
+                        if (this.disabled) {
+                            const disappointments = [
+                                "Did you really think that would work?", "Nothing happens. As expected.",
+                                "The void acknowledges your click.", "Error 404: Function not found.",
+                                "You clicked nothing. Literally.", "Connect wallet first, genius.",
+                                "Even MetaMask is confused.", "Transaction failed before it started."
+                            ];
+                            const randomMsg = disappointments[Math.floor(Math.random() * disappointments.length)];
+                            const originalText = button.textContent;
+                            button.textContent = randomMsg;
+                            setTimeout(() => {
+                                button.textContent = originalText;
+                            }, 2000);
+                        }
+                    });
+                }
             });
 
             // Simulate price changes for other stats
@@ -997,6 +1263,18 @@
                 btn.classList.add('web3-btn');
                 btn.disabled = false;
                 btn.style.cursor = 'pointer';
+
+                // Remove old onclick if it exists to prevent double calls
+                btn.onclick = null;
+
+                // Re-assign onclick for specific buttons to show popup
+                if (btnId === 'buyBtn') btn.onclick = () => showPopup('buy');
+                else if (btnId === 'sellBtn') btn.onclick = () => showPopup('sell');
+                else if (btnId === 'stakeBtn') btn.onclick = () => showPopup('stake');
+                else if (btnId === 'burnBtn') btn.onclick = () => showPopup('burn');
+                else if (btnId === 'mintKnotBtn') btn.onclick = () => mintNothing(); // Mint KNOT directly
+                else if (btnId === 'mintNftBtn') btn.onclick = () => mintNft(); // Mint NFT directly
+                else if (btnId === 'swapBtn') btn.onclick = () => swapNothing(); // Swap directly
             });
         }
 
@@ -1037,7 +1315,8 @@
             }, 2500 + Math.random() * 1500);
         }
 
-        async function burnNothing() {
+        // Modified burnNothing to accept amount
+        async function burnNothing(amountToProcess = 0) { // Add amountToProcess parameter
             if (!isWalletConnected) {
                 updateMintStatus("Connect wallet to burn your existence!");
                 return;
@@ -1047,8 +1326,12 @@
                 return;
             }
 
-            const amountToBurn = 100 + Math.floor(Math.random() * 400); // Burn random amount between 100-500
-            let actualBurned = Math.min(amountToBurn, currentKnotBalance);
+            let actualBurned = amountToProcess > 0 ? Math.min(amountToProcess, currentKnotBalance) : (100 + Math.floor(Math.random() * 400)); // Use provided amount or random
+
+            if (actualBurned === 0) { // If calculated amount is 0
+                updateMintStatus("Enter a valid amount to burn, or you have nothing to burn.");
+                return;
+            }
 
             updateMintStatus(`Burning ${actualBurned} KNOT... Becoming less...`);
 
@@ -1061,7 +1344,8 @@
             }, 1800 + Math.random() * 1000);
         }
 
-        async function stakeNothing() {
+        // Modified stakeNothing to accept amount
+        async function stakeNothing(amountToProcess = 0) { // Add amountToProcess parameter
             if (!isWalletConnected) {
                 updateMintStatus("Connect wallet to stake your dreams!");
                 return;
@@ -1071,8 +1355,12 @@
                 return;
             }
 
-            const amountToStake = 50 + Math.floor(Math.random() * 200); // Stake random amount between 50-250
-            let actualStaked = Math.min(amountToStake, currentKnotBalance);
+            let actualStaked = amountToProcess > 0 ? Math.min(amountToProcess, currentKnotBalance) : (50 + Math.floor(Math.random() * 200)); // Use provided amount or random
+
+            if (actualStaked === 0) { // If calculated amount is 0
+                updateMintStatus("Enter a valid amount to stake, or you have no KNOT to stake.");
+                return;
+            }
 
             updateMintStatus(`Staking ${actualStaked} KNOT... Expecting precisely zero rewards.`);
 
@@ -1158,23 +1446,7 @@
         }
 
         // Simulate other CTA button interactions (not Web3-enabled ones)
-        document.addEventListener('click', function(e) {
-            if (e.target.id === 'buyBtn' && isWalletConnected) {
-                simulateTransaction("Buying NOTHING with real money...", "Purchase successful! You now own more nothing!");
-                currentKnotBalance += 500 + Math.floor(Math.random() * 500); // Get some KNOT
-                document.getElementById("knotBalance").textContent = `${currentKnotBalance.toLocaleString()} KNOT`;
-            } else if (e.target.id === 'sellBtn' && isWalletConnected) {
-                if (currentKnotBalance <= 0) {
-                    simulateTransaction("You have no NOTHING to sell. Good for you.", "You successfully sold nothing for nothing!");
-                    return;
-                }
-                const soldAmount = Math.min(currentKnotBalance, 100 + Math.floor(Math.random() * 400));
-                simulateTransaction("Selling NOTHING for even less...", `Sale complete! You lost ${soldAmount} KNOT as expected!`);
-                currentKnotBalance -= soldAmount;
-                document.getElementById("knotBalance").textContent = `${currentKnotBalance.toLocaleString()} KNOT`;
-            }
-            // Stake and Burn are handled by their direct onclick functions now
-        });
+        // Note: Buy/Sell are now handled via showPopup -> simulateBuy/Sell
 
         function simulateTransaction(processingMsg, successMsg, statusElementId = 'mintStatus') {
             document.getElementById(statusElementId).textContent = processingMsg;
@@ -1246,6 +1518,35 @@
             }
         }
 
+        // --- Real-time Price Simulation ---
+        let currentSimulatedPrice = 0.00000068; // Starting price
+        const priceDisplay = document.getElementById("currentKnotPrice");
+        const priceChangePercentDisplay = document.getElementById("priceChangePercent");
+
+        function updateSimulatedPrice() {
+            // Simulate small random fluctuations
+            const fluctuation = (Math.random() - 0.5) * 0.00000001; // +/- 0.000000005
+            currentSimulatedPrice += fluctuation;
+
+            // Keep price positive and within a reasonable range (e.g., between 0.00000001 and 0.00000100)
+            currentSimulatedPrice = Math.max(0.00000001, Math.min(0.00000100, currentSimulatedPrice));
+
+            // Update display
+            priceDisplay.textContent = `$${currentSimulatedPrice.toFixed(8)}`;
+
+            // Simulate price change percentage (always +infinity for fun)
+            priceChangePercentDisplay.textContent = `+∞%`;
+
+            // Optionally, update the 'Current Price' stat in the stats grid
+            const statsPriceDisplay = document.getElementById("currentPrice");
+            if (statsPriceDisplay) {
+                statsPriceDisplay.textContent = `$${currentSimulatedPrice.toFixed(8)}`;
+            }
+        }
+
+        // Update price every 1 second
+        setInterval(updateSimulatedPrice, 1000);
+        updateSimulatedPrice(); // Initial call
 
         // Easter egg: Konami code for extra chaos
         let konamiCode = [];
@@ -1326,6 +1627,121 @@
                     connectWallet(); // Re-connect to update address/balance
                 }
             });
+        }
+
+        // --- Popup Functions ---
+        let currentAction = ''; // To store which action is being confirmed
+        let currentAmount = 0; // To store the amount for the action
+
+        function showPopup(actionType) {
+            let amountInputId = '';
+            let title = '';
+            let message = '';
+            let actionFunction;
+
+            currentAction = actionType;
+
+            switch (actionType) {
+                case 'buy':
+                    amountInputId = 'buyAmount';
+                    title = 'Confirm Buy Nothing';
+                    message = 'Are you sure you want to buy <span id="popupAmount"></span> Nothing?';
+                    actionFunction = () => simulateBuy(currentAmount);
+                    break;
+                case 'sell':
+                    amountInputId = 'sellAmount';
+                    title = 'Confirm Sell Nothing';
+                    message = 'Are you sure you want to sell <span id="popupAmount"></span> Nothing?';
+                    actionFunction = () => simulateSell(currentAmount);
+                    break;
+                case 'stake':
+                    amountInputId = 'stakeAmount';
+                    title = 'Confirm Stake Nothing';
+                    message = 'Are you sure you want to stake <span id="popupAmount"></span> KNOT?';
+                    actionFunction = () => stakeNothing(currentAmount); // Pass amount to stakeNothing
+                    break;
+                case 'burn':
+                    amountInputId = 'burnAmount';
+                    title = 'Confirm Burn Nothing';
+                    message = 'Are you sure you want to burn <span id="popupAmount"></span> KNOT?';
+                    actionFunction = () => burnNothing(currentAmount); // Pass amount to burnNothing
+                    break;
+                default:
+                    return; // Should not happen
+            }
+
+            const amount = parseFloat(document.getElementById(amountInputId).value);
+
+            if (!isWalletConnected) { // Check if wallet is connected before showing popup
+                updateMintStatus("Connect wallet first to proceed with this action.");
+                return;
+            }
+
+            if (isNaN(amount) || amount <= 0) {
+                updateMintStatus(`Please enter a valid amount for ${actionType}.`);
+                return;
+            }
+            currentAmount = amount; // Store the amount for confirmation
+
+            document.getElementById('popupTitle').textContent = title;
+            document.getElementById('popupMessage').innerHTML = message.replace('<span id="popupAmount"></span>', `<span style="color:#00ff80;">${amount.toLocaleString()}</span>`);
+            document.getElementById('actionPopup').style.display = 'flex'; // Show the popup
+
+            // Set up the confirm button's action
+            const confirmBtn = document.getElementById('popupConfirmBtn');
+            confirmBtn.onclick = () => {
+                hidePopup();
+                actionFunction(); // Execute the specific action function
+            };
+        }
+
+        function hidePopup() {
+            document.getElementById('actionPopup').style.display = 'none';
+        }
+
+        // New simulated buy/sell functions
+        function simulateBuy(amount) {
+            if (!isWalletConnected) {
+                updateMintStatus("Connect wallet first to buy nothing!");
+                return;
+            }
+            if (amount <= 0) {
+                updateMintStatus("Enter a valid amount to buy.");
+                return;
+            }
+            updateMintStatus(`Buying ${amount} Nothing... Preparing to lose money...`);
+
+            setTimeout(() => {
+                const txHash = "0x" + Math.random().toString(16).substr(2, 64);
+                currentKnotBalance += amount;
+                document.getElementById("knotBalance").textContent = `${currentKnotBalance.toLocaleString()} KNOT`;
+                updateMintStatus(`✔️ Successfully bought ${amount} Nothing! TX: ${txHash.slice(0, 10)}... Congrats on your new void.`);
+                appendRandomMessage();
+            }, 2000 + Math.random() * 1000);
+        }
+
+        function simulateSell(amount) {
+            if (!isWalletConnected) {
+                updateMintStatus("Connect wallet first to sell nothing!");
+                return;
+            }
+            if (amount <= 0) {
+                updateMintStatus("Enter a valid amount to sell.");
+                return;
+            }
+            if (amount > currentKnotBalance) {
+                updateMintStatus("You don't have enough KNOT to sell that much nothing.");
+                return;
+            }
+            updateMintStatus(`Selling ${amount} Nothing... Preparing to gain nothing...`);
+
+            setTimeout(() => {
+                const txHash = "0x" + Math.random().toString(16).substr(2, 64);
+                currentKnotBalance -= amount;
+                document.getElementById("knotBalance").textContent = `${currentKnotBalance.toLocaleString()} KNOT`;
+                updateMintStatus(`✔️ Successfully sold ${amount} Nothing! TX: ${txHash.slice(0, 10)}... You're free!`);
+                appendRandomMessage();
+            }, 2000 + Math.random() * 1000);
         }
     </script>
 </body>
