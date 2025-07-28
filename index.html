@@ -799,8 +799,8 @@
         <footer>
             <div class="footer-links">
                 <a href="#" onclick="toggleVoidpaper(); return false;">Non-Whitepaper</a>
-                <a href="#">Un-Telegram</a>
-                <a href="#">Anti-Twitter</a>
+                <a href="https://t.me/knothingtelegram" target="_blank">Telegram</a>
+                <a href="https://x.com/0xknothingx0?t=9d7J1nv774WSYTaj4rKXng&s=09" target="_blank">X (Twitter)</a>
                 <a href="#">Void-Discord</a>
                 <a href="#">Null-GitHub</a>
             </div>
@@ -850,27 +850,38 @@
             }
             createParticles();
 
-            // Dynamic countdown and price logic
-            function updateCountdownAndPrice() {
-                let hours = Math.floor(countdownTime / 3600);
-                let minutes = Math.floor((countdownTime % 3600) / 60);
-                let seconds = countdownTime % 60;
-                document.getElementById("countdownDisplay").textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+            // Dynamic countdown logic (Real-time)
+            function updateRealtimeCountdown() {
+                const now = new Date();
+                const bangkokTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
 
-                // Calculate price based on countdown progress
-                const timeElapsed = initialCountdownTime - countdownTime;
-                const price = (basePrice + (timeElapsed / initialCountdownTime) * priceIncreaseFactor).toFixed(8);
-                document.getElementById("currentPrice").textContent = `$${price}`;
+                // ตั้งเวลาสิ้นสุดเป็นเที่ยงคืนของวันนี้ (ตามเวลา Bangkok)
+                const endOfDay = new Date(bangkokTime);
+                endOfDay.setHours(23, 59, 59, 999);
 
-                countdownTime--;
-                if (countdownTime < 0) {
-                    countdownTime = initialCountdownTime; // Reset to initial time
-                    updateMintStatus("The cycle of nothingness resets. Price dropped!");
+                // คำนวณเวลาที่เหลือ
+                let timeLeft = endOfDay.getTime() - bangkokTime.getTime();
+
+                if (timeLeft <= 0) {
+                    // หากถึงเที่ยงคืนแล้ว ให้ตั้งเวลาใหม่เป็นเที่ยงคืนของวันถัดไป
+                    const nextDay = new Date(bangkokTime);
+                    nextDay.setDate(bangkokTime.getDate() + 1);
+                    nextDay.setHours(23, 59, 59, 999);
+                    timeLeft = nextDay.getTime() - bangkokTime.getTime();
+                    updateMintStatus("Another day, another nothingness begins!");
                     appendRandomMessage();
                 }
+
+                let hours = Math.floor(timeLeft / (1000 * 60 * 60));
+                let minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+                let seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+                document.getElementById("countdownDisplay").textContent = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
             }
-            countdownInterval = setInterval(updateCountdownAndPrice, 1000); // Update every second
-            updateCountdownAndPrice(); // Call immediately to set initial state
+
+            // เรียกใช้งาน countdown ทุกวินาที
+            setInterval(updateRealtimeCountdown, 1000);
+            updateRealtimeCountdown(); // เรียกใช้งานทันทีเมื่อโหลดหน้า
 
             // Enhanced message system with Web3 integration
             const messages = [
@@ -958,38 +969,25 @@
             });
             updateMostNonsensicalMeme(); // Initial call for top meme
             setInterval(updateMostNonsensicalMeme, 30000); // Update top meme every 30s
+
+            connectWallet(); // จำลองการเชื่อมต่อ Wallet เมื่อโหลดหน้า
         });
 
         // Web3 Functions
         async function connectWallet() {
-            if (!window.ethereum) {
-                alert("Please install MetaMask to connect to the void!");
-                return;
-            }
-            try {
-                provider = new ethers.providers.Web3Provider(window.ethereum);
-                await provider.send("eth_requestAccounts", []);
-                signer = provider.getSigner();
-                userAddress = await signer.getAddress();
-                const balance = await provider.getBalance(userAddress);
-                document.getElementById("walletAddress").textContent = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
-                document.getElementById("walletBalance").textContent = parseFloat(ethers.utils.formatEther(balance)).toFixed(4);
-                document.getElementById("walletInfo").style.display = "block";
+            isWalletConnected = true;
+            userAddress = "0xDummyWalletAddressXXXXXXXXXXXXXXXX"; // ที่อยู่ Wallet ปลอม
+            const dummyBalance = "1.2345"; // ยอดคงเหลือปลอม
 
-                // Enable Web3 buttons
-                isWalletConnected = true;
-                enableWeb3Buttons();
+            document.getElementById("walletAddress").textContent = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+            document.getElementById("walletBalance").textContent = parseFloat(dummyBalance).toFixed(4);
+            document.getElementById("walletInfo").style.display = "block";
 
-                // Update button text
-                document.querySelector('.wallet-connect-btn').textContent = "Connected to Void";
-                appendRandomMessage();
-                updateMintStatus("Wallet connected. Ready to waste gas.");
-                updateNftMintStatus("Wallet connected. Ready to mint your void.");
-            } catch (error) {
-                console.error("Connection failed:", error);
-                updateMintStatus("Connection failed. Even MetaMask gave up.");
-                updateNftMintStatus("Connection failed. Even MetaMask gave up.");
-            }
+            enableWeb3Buttons();
+            document.querySelector('.wallet-connect-btn').textContent = "Connected to Void";
+            appendRandomMessage();
+            updateMintStatus("Wallet connected (simulated). Ready to waste gas.");
+            updateNftMintStatus("Wallet connected (simulated). Ready to mint your void.");
         }
 
         function enableWeb3Buttons() {
@@ -1291,15 +1289,17 @@
         setInterval(async () => {
             if (isWalletConnected && provider && userAddress) {
                 try {
-                    const balance = await provider.getBalance(userAddress);
-                    document.getElementById("walletBalance").textContent = parseFloat(ethers.utils.formatEther(balance)).toFixed(4);
+                    // This part won't actually fetch real balance with the simulated wallet
+                    // but it keeps the structure for potential future real integration
+                    // const balance = await provider.getBalance(userAddress);
+                    // document.getElementById("walletBalance").textContent = parseFloat(ethers.utils.formatEther(balance)).toFixed(4);
                 } catch (error) {
                     console.error("Failed to update balance:", error);
                 }
             }
         }, 30000);
 
-        // Network change detection
+        // Network change detection (still here for completeness, won't trigger with simulated wallet)
         if (window.ethereum) {
             window.ethereum.on('chainChanged', (chainId) => {
                 updateMintStatus("Network changed! We're still confused.");
