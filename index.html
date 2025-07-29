@@ -832,7 +832,71 @@
             max-width: 400px;
             width: 90%;
             box-shadow: 0 0 30px rgba(230, 57, 70, 0.5);
+            position: relative; /* For close button */
         }
+        
+        /* Specific styles for How To Buy popup */
+        .how-to-buy-popup {
+            max-width: 700px; /* Wider for more content */
+            text-align: left; /* Align text left */
+        }
+
+        .how-to-buy-popup h3 {
+            color: var(--accent-green);
+            font-family: 'Orbitron', monospace;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            text-align: center;
+            text-shadow: 0 0 10px rgba(0, 255, 128, 0.5);
+        }
+
+        .how-to-buy-popup ol {
+            list-style-type: decimal;
+            padding-left: 25px;
+            color: #ccc;
+            font-size: 1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .how-to-buy-popup ol li {
+            margin-bottom: 15px;
+        }
+
+        .how-to-buy-popup ol li strong {
+            color: var(--primary-color);
+            font-weight: bold;
+        }
+
+        .how-to-buy-popup ol li a {
+            color: var(--accent-green);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .how-to-buy-popup ol li a:hover {
+            color: #ff6b7a;
+            text-decoration: underline;
+        }
+
+        .how-to-buy-popup .close-btn {
+            background-color: #555;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+            display: block;
+            margin: 20px auto 0;
+        }
+
+        .how-to-buy-popup .close-btn:hover {
+            background-color: #777;
+        }
+
 
         .popup-content h3 {
             color: var(--primary-color);
@@ -976,6 +1040,16 @@
                 padding: 10px 20px;
                 font-size: 0.95rem;
             }
+            .how-to-buy-popup {
+                padding: 20px;
+            }
+            .how-to-buy-popup h3 {
+                font-size: 1.4rem;
+            }
+            .how-to-buy-popup ol {
+                font-size: 0.9rem;
+                padding-left: 20px;
+            }
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -1051,7 +1125,8 @@
 
             <div class="lp-footer-buttons">
                 <button id="howToBuyBtn">HOW TO BUY NOTHING</button>
-                <button id="burnToVoidBtn">BURN TO VOID</button> <button id="giveawayBtn">+777K MEANINGLESS GIVEAWAY</button>
+                <button id="burnToVoidBtn">BURN TO VOID</button>
+                <button id="giveawayBtn">+777K MEANINGLESS GIVEAWAY</button>
             </div>
         </section>
 
@@ -1179,16 +1254,40 @@
         </div>
     </div>
 
+    <div id="howToBuyPopup" class="popup-overlay">
+        <div class="popup-content how-to-buy-popup">
+            <h3>HOW TO BUY 0xKNOTHING</h3>
+            <ol>
+                <li><strong>Step 1: Get A Wallet (For Nothing)</strong><br>
+                    Download <a href="https://metamask.io/download/" target="_blank">MetaMask</a> or your preferred void-compatible wallet. This will hold your ETH (or other currencies) that you'll exchange for 0xKNOTHING, and your 0xKNOTHING tokens (which are, effectively, nothing).</li>
+                <li><strong>Step 2: Fund Your Wallet (With Something)</strong><br>
+                    You'll need some ETH (or USDT/CARD if supported by the exchange). You can get ETH from exchanges like Binance, Coinbase, or any other platform that deals in actual value. Transfer it to your MetaMask wallet.</li>
+                <li><strong>Step 3: Connect to the Abyss (Our DApp)</strong><br>
+                    On this very page, click the "CONNECT WALLET" button. Your MetaMask (or other wallet) will prompt you to connect. Approve the connection. Now your wallet is ready to participate in our glorious non-economy.</li>
+                <li><strong>Step 4: Swap for Nothingness (The Transaction)</strong><br>
+                    In the "Buy/Sell" section, enter the amount of ETH (or other currency) you wish to exchange. The system will calculate how much 0xKNOTHING (which is infinite, but you'll get a specific number to make it look real) you'll receive. Click the "CONNECT WALLET" button (which will change to "BUY NOW" once connected) to initiate the transaction.</li>
+                <li><strong>Step 5: Confirm Transaction (And Your Regret)</strong><br>
+                    Your wallet will pop up asking you to confirm the transaction and gas fees. Review the details. If you're truly committed to embracing nothingness, confirm the transaction. The tokens will appear in your wallet shortly.</li>
+                <li><strong>Step 6: Add 0xKNOTHING to Your Wallet (If You Must)</strong><br>
+                    Since 0xKNOTHING is, well, nothing, you might need to manually add the token to your MetaMask to see it. Use our contract address (if we ever bothered to deploy one that works) and the token symbol "0xKNOTHING" with 18 decimals.
+                    <br><strong>(Disclaimer: We haven't deployed a contract yet. It's too much effort for nothing.)</strong></li>
+            </ol>
+            <p style="text-align: center; font-style: italic;">Congratulations! You've successfully acquired nothing. We told you so.</p>
+            <button class="close-btn" onclick="hideHowToBuyPopup()">Close</button>
+        </div>
+    </div>
+
+
     <script>
         // Global Web3 variables
         let provider, signer, userAddress;
         let isWalletConnected = false;
-        let currentKnotBalance = 0; // Initialize 0xKNOTHING balance
-        let stakedKnot = 0; // Initialize staked 0xKNOTHING (if still used elsewhere)
-        let totalUsdRaised = 0;
-        let totalTokensSold = 0;
-        const usdGoal = 1000000; // Example goal
-        const tokensGoal = 1000000000; // Example goal
+        let currentKnotBalance = parseFloat(localStorage.getItem('0xknothing_knotBalance')) || 0; // Load from localStorage
+        let initialEthBalance = parseFloat(localStorage.getItem('0xknothing_ethBalance')) || 1.2345; // Initial dummy balance
+        let lastEthBalanceUpdate = parseInt(localStorage.getItem('0xknothing_lastEthBalanceUpdate')) || Date.now(); // Last update timestamp
+
+        let totalUsdRaised = parseFloat(localStorage.getItem('0xknothing_usdRaised')) || 0;
+        let totalTokensSold = parseFloat(localStorage.getItem('0xknothing_tokensSold')) || 0;
 
         let currentStage = parseInt(localStorage.getItem('0xknothing_currentStage')) || 1; // Start stage, load from localStorage
         let knotPrice = calculateKnotPrice(currentStage); // Calculate price based on stage
@@ -1399,8 +1498,9 @@
 
             // Initialize the new Buy/Sell interface
             updateLPInterface();
-            setInterval(updateLPInterface, 5000); // Update stage/price/progress every 5 seconds
-
+            // Update USD Raised and Tokens Sold every minute
+            setInterval(updateUsdTokensRaised, 60000); // Every 60 seconds
+            
             document.getElementById('buyInputAmount').addEventListener('input', calculateReceiveAmount);
             document.getElementById('buyCurrencySelect').addEventListener('change', calculateReceiveAmount);
             document.getElementById('maxAmountBtn').addEventListener('click', setMaxBuyAmount);
@@ -1409,8 +1509,7 @@
 
             // Add handlers for new footer buttons
             document.getElementById('howToBuyBtn').addEventListener('click', () => {
-                updateLPStatus("Buying Nothing: Step 1: Realize you're buying nothing. Step 2: Question your life. Step 3: Click 'Connect Wallet' (if you dare).");
-                appendRandomMessage();
+                showHowToBuyPopup(); // Call the new popup
             });
             document.getElementById('giveawayBtn').addEventListener('click', () => {
                 updateLPStatus("Congratulaions! You just won... nothing! As expected. No gas fees required!");
@@ -1497,10 +1596,25 @@
         async function connectWallet() {
             isWalletConnected = true;
             userAddress = "0xDummyWalletAddressXXXXXXXXXXXXXXXX";
-            const dummyBalance = "1.2345";
+            
+            // Check if it's been 24 hours since last ETH balance update
+            const now = Date.now();
+            const oneDay = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+            if (now - lastEthBalanceUpdate >= oneDay) {
+                // Simulate a random, small change in ETH balance
+                const change = (Math.random() - 0.5) * 0.1; // +/- 0.05 ETH
+                initialEthBalance = Math.max(0.001, initialEthBalance + change); // Ensure it doesn't go below almost zero
+                localStorage.setItem('0xknothing_ethBalance', initialEthBalance.toFixed(4));
+                lastEthBalanceUpdate = now;
+                localStorage.setItem('0xknothing_lastEthBalanceUpdate', lastEthBalanceUpdate);
+                updateLPStatus("Your ETH balance slightly shifted in the void...");
+                appendRandomMessage();
+            }
 
             document.getElementById("walletAddress").textContent = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
-            document.getElementById("walletBalance").textContent = parseFloat(dummyBalance).toFixed(4);
+            document.getElementById("walletBalance").textContent = initialEthBalance.toFixed(4); // Use the updated balance
+            document.getElementById("knotBalance").textContent = `${currentKnotBalance.toLocaleString()} 0xKNOTHING`; // Update 0xKNOTHING balance
             document.getElementById("walletInfo").style.display = "block";
 
             // Update the new connect button
@@ -1535,7 +1649,7 @@
             document.getElementById("currentStage").textContent = `Stage ${currentStage}`;
 
             // Handle Infinity price for display
-            if (knotPrice === Infinity) {
+            if (knotPrice === Infinity || knotPrice === 0) {
                 document.getElementById("nextStagePrice").textContent = `$∞ (Impossible)`;
                 document.getElementById("knottingPrice").textContent = `$∞`;
             } else {
@@ -1543,21 +1657,30 @@
                 document.getElementById("knottingPrice").textContent = `$${knotPrice.toFixed(8)}`;
             }
 
-            // Simulate USD Raised and Tokens Sold
-            // These should also be somewhat tied to currentStage, but with more randomness
-            totalUsdRaised = Math.floor(currentStage * 10000 + Math.random() * 50000); // Example increase
-            totalTokensSold = Math.floor(currentStage * 100000000 + Math.random() * 500000000); // Example increase
+            // USD Raised and Tokens Sold are updated by updateUsdTokensRaised function
+            document.getElementById("usdRaised").textContent = `$${totalUsdRaised.toLocaleString(undefined, { maximumFractionDigits: 0 })} / $∞`; // Goal can be infinite
+            document.getElementById("tokensSold").textContent = `${totalTokensSold.toLocaleString(undefined, { maximumFractionDigits: 0 })} / ∞`; // Goal can be infinite
 
-            document.getElementById("usdRaised").textContent = `$${totalUsdRaised.toLocaleString()} / $∞`; // Goal can be infinite
-            document.getElementById("tokensSold").textContent = `${totalTokensSold.toLocaleString()} / ∞`; // Goal can be infinite
-
-            // Update progress bar - maybe remove if goal is infinite or make it always 0-100% of a stage
-            const progressWithinStage = (currentStage % 1) * 100; // Simplified for "nothing" concept
-            document.getElementById("progressFill").style.width = `${Math.min(100, progressWithinStage).toFixed(2)}%`; // Cap at 100%
-            // Or, for a more "nothing" feel, make it completely random
-            // document.getElementById("progressFill").style.width = `${(Math.random() * 100).toFixed(2)}%`;
+            // Update progress bar - always 0-100% of a stage, but randomly fluctuating for "nothing" theme
+            document.getElementById("progressFill").style.width = `${(Math.random() * 100).toFixed(2)}%`;
 
             calculateReceiveAmount(); // Update 0xKNOTHING amount when prices change
+        }
+
+        function updateUsdTokensRaised() {
+            // Simulate gradual increase for USD Raised and Tokens Sold
+            const usdIncrease = Math.random() * 1000 + 50; // Increase by $50 - $1050 per minute
+            const tokensIncrease = Math.random() * 5000000 + 100000; // Increase by 100k - 5.1M tokens per minute
+
+            totalUsdRaised += usdIncrease;
+            totalTokensSold += tokensIncrease;
+
+            // Save to localStorage
+            localStorage.setItem('0xknothing_usdRaised', totalUsdRaised);
+            localStorage.setItem('0xknothing_tokensSold', totalTokensSold);
+
+            updateLPInterface(); // Refresh display
+            appendRandomMessage(); // Add a message for increased activity
         }
 
         function calculateReceiveAmount() {
@@ -1596,8 +1719,8 @@
             const selectedCurrency = document.getElementById('buyCurrencySelect').value;
             let maxAmount = 0;
 
-            // Use dummyBalance from connectWallet
-            const dummyEthBalance = parseFloat(document.getElementById("walletBalance").textContent);
+            // Use initialEthBalance for calculations
+            const dummyEthBalance = initialEthBalance;
 
             switch (selectedCurrency) {
                 case 'ETH':
@@ -1802,15 +1925,8 @@
             }
         }
 
-        // Auto-update wallet balance periodically
-        setInterval(async () => {
-            if (isWalletConnected && provider && userAddress) {
-                try {
-                } catch (error) {
-                    console.error("Failed to update balance:", error);
-                }
-            }
-        }, 30000);
+        // Auto-update wallet balance periodically (This is now handled in connectWallet for 24h updates)
+        // No need for a separate interval here anymore.
 
         // Network change detection
         if (window.ethereum) {
@@ -1910,6 +2026,14 @@
             document.getElementById('actionPopup').style.display = 'none';
         }
 
+        function showHowToBuyPopup() {
+            document.getElementById('howToBuyPopup').style.display = 'flex';
+        }
+
+        function hideHowToBuyPopup() {
+            document.getElementById('howToBuyPopup').style.display = 'none';
+        }
+
         async function processLPBuy(amount, currency, receivedKnot) {
             updateLPStatus(`Initiating purchase of ${receivedKnot.toLocaleString()} 0xKNOTHING with ${amount.toLocaleString()} ${currency}...`);
             appendRandomMessage();
@@ -1917,9 +2041,23 @@
             setTimeout(() => {
                 const txHash = "0x" + Math.random().toString(16).substr(2, 64);
                 currentKnotBalance += receivedKnot;
+                localStorage.setItem('0xknothing_knotBalance', currentKnotBalance); // Save to localStorage
                 document.getElementById("knotBalance").textContent = `${currentKnotBalance.toLocaleString()} 0xKNOTHING`;
+                
+                // Deduct from simulated ETH balance
+                if (currency === 'ETH') {
+                    initialEthBalance = Math.max(0, initialEthBalance - amount); // Ensure balance doesn't go negative
+                    localStorage.setItem('0xknothing_ethBalance', initialEthBalance.toFixed(4));
+                    document.getElementById("walletBalance").textContent = initialEthBalance.toFixed(4);
+                } else {
+                    // For USDT/CARD, just assume deduction from an abstract pool
+                }
+
                 totalUsdRaised += (amount * (currency === 'ETH' ? 2000 : (currency === 'USDT' ? 1 : 0.5))); // Add to simulated raised USD
                 totalTokensSold += receivedKnot; // Add to simulated tokens sold
+                localStorage.setItem('0xknothing_usdRaised', totalUsdRaised);
+                localStorage.setItem('0xknothing_tokensSold', totalTokensSold);
+
                 updateLPInterface(); // Update the LP interface immediately
 
                 updateLPStatus(`✔️ Successfully bought ${receivedKnot.toLocaleString()} 0xKNOTHING! TX: ${txHash.slice(0, 10)}... Welcome to the void.`);
@@ -1940,6 +2078,7 @@
             setTimeout(() => {
                 const burnedAmount = currentKnotBalance;
                 currentKnotBalance = 0; // Set balance to 0 after burning
+                localStorage.setItem('0xknothing_knotBalance', currentKnotBalance); // Save to localStorage
                 document.getElementById("knotBalance").textContent = `${currentKnotBalance.toLocaleString()} 0xKNOTHING`;
 
                 const txHash = "0x" + Math.random().toString(16).substr(2, 64);
