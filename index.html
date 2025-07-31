@@ -1238,6 +1238,7 @@
     <header>
         <h1>0xKNOTHING</h1>
         <p>The anti-utility token. No purpose. No roadmap. Pure, unadulterated nothingness. Invest your hopes and dreams here to see them vanish.</p>
+        <p id="dateTime" style="font-size: 1rem; color: var(--secondary-color); margin-top: 15px;"></p>
     </header>
 
     <div class="container">
@@ -1434,9 +1435,9 @@
             <h3>3. The Anti-Roadmap (or The Road to Nowhere)</h3>
             <p>Our roadmap is a blank canvas, perfectly reflecting our commitment to going nowhere. We plan to achieve absolutely nothing, consistently, for an indefinite period. Key milestones include:</p>
             <ul>
-                <li>**Q3 2025: Continue to exist (maybe).**</li>
-                <li>**Q4 2025: Fail to launch any meaningful partnerships.**</li>
-                <li>**2026: Further decentralize the feeling of despair.**</li>
+                <li>**Q3 2024: Continue to exist (maybe).**</li>
+                <li>**Q4 2024: Fail to launch any meaningful partnerships.**</li>
+                <li>**2025: Further decentralize the feeling of despair.**</li>
                 <li>**Future: Achieve ultimate oblivion.**</li>
                 <li>**Forever: Continue to be nothing.**</li>
             </ul>
@@ -1454,7 +1455,7 @@
     </div>
 
     <footer>
-        <p>&copy; 2025 0xKNOTHING. All rights reserved. (We think. Who cares anyway?)</p>
+        <p>&copy; 2024 0xKNOTHING. All rights reserved. (We think. Who cares anyway?)</p>
         <div class="social-links">
             <a href="#" target="_blank">X</a> |
             <a href="#" target="_blank">Telegram</a> |
@@ -1462,6 +1463,17 @@
         </div>
          <button id="darkModeToggle" onclick="toggleDarkMode()" style="margin-top: 15px; background-color: #333; border: 1px solid #555;">Darkmode</button>
     </footer>
+
+    <!-- Welcome Popup (Show on first visit) -->
+    <div id="welcomePopup" class="popup-overlay">
+        <div class="popup-content">
+            <h3>Welcome to 0xKNOTHING</h3>
+            <p>This is the beginning of the journey into "The Void".</p>
+            <div class="popup-buttons">
+                <button id="createWalletBtn" class="web3-btn" style="width: 100%;">🔑 Create 0xKNOTHING WALLET</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Main Action Popup -->
     <div id="actionPopup" class="popup-overlay">
@@ -1724,6 +1736,28 @@
             createParticles();
             setInterval(updateRealtimeCountdown, 1000);
             updateRealtimeCountdown();
+            
+            // New function call for date and time
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
+
+            // --- NEW: Welcome Popup Logic ---
+            const hasVisited = localStorage.getItem('0xknothing_hasVisited_v2');
+            const isAlreadyConnected = localStorage.getItem('0xknothing_isConnected_v3') === 'true';
+
+            if (!hasVisited && !isAlreadyConnected) {
+                document.getElementById('welcomePopup').style.display = 'flex';
+            } else {
+                 document.getElementById('connectWalletBtn').style.display = 'inline-block';
+            }
+
+            document.getElementById('createWalletBtn').addEventListener('click', () => {
+                document.getElementById('welcomePopup').style.display = 'none';
+                localStorage.setItem('0xknothing_hasVisited_v2', 'true');
+                document.getElementById('connectWalletBtn').style.display = 'inline-block';
+                connectWallet(); // Normal, non-silent connect
+            });
+            // --- END: Welcome Popup Logic ---
 
             for (let i = 0; i < 3; i++) { setTimeout(appendRandomMessage, i * 1000); }
             setInterval(appendRandomMessage, 4000);
@@ -1774,7 +1808,7 @@
             initializeChart();
             setInterval(updateChartData, 2000);
             
-            if (localStorage.getItem('0xknothing_isConnected_v3') === 'true') {
+            if (isAlreadyConnected) {
                  connectWallet(true); // silent connect
             }
         });
@@ -2341,11 +2375,10 @@
             if(!countdownEl) return;
             const now = new Date();
             const endOfDay = new Date(now);
-            endOfDay.setUTCHours(23, 59, 59, 999);
+            endOfDay.setHours(23, 59, 59, 999); // Use local timezone
             let timeLeft = endOfDay.getTime() - now.getTime();
 
-            if (timeLeft <= 1000) { // Check if we are at the turn of the day
-                // This block will run once when the day changes
+            if (timeLeft <= 1000) { 
                 if (!window.dayChanged) {
                     currentStage++;
                     localStorage.setItem('0xknothing_currentStage_v3', currentStage);
@@ -2354,7 +2387,7 @@
                     let stageName = stageNames[(currentStage - 1) % stageNames.length];
                     showToast(`Void transitioned to ${stageName}! Embrace the new nothingness.`, 'info');
                     window.dayChanged = true; 
-                    setTimeout(() => { window.dayChanged = false; }, 2000); // Reset flag after 2s
+                    setTimeout(() => { window.dayChanged = false; }, 2000); 
                 }
             }
             let h = Math.floor(timeLeft / (1000 * 60 * 60));
@@ -2363,6 +2396,13 @@
             countdownEl.textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
         }
         
+        function updateDateTime() {
+            const dateTimeEl = document.getElementById("dateTime");
+            if (!dateTimeEl) return;
+            const now = new Date();
+            dateTimeEl.textContent = now.toLocaleString();
+        }
+
         function initializeChart() {
             const ctx = document.getElementById('priceChart')?.getContext('2d');
             if(!ctx) return;
