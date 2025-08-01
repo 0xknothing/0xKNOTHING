@@ -1,16 +1,23 @@
-## Hi there 👋
+# 0xknoting
+# 0xKNOTHING
 
-<!--
-**0xknothing/0xKNOTHING** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+> "Nothing matters. So we KNOT."
 
-Here are some ideas to get you started:
+This is a project about absolutely nothing.  
+No token. No utility. No purpose.  
+Just vibes.  
+Just knots.
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+## ❌ Roadmap
+- 
+
+## ❌ Whitepaper
+- 
+
+## ❌ Utility
+- 
+
+## ✅ Nothing
+- Always.
+
+Join us in celebrating the art of doing Nothing.
